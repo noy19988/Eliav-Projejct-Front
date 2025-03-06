@@ -1,0 +1,135 @@
+/* הגדרת העמוד הראשי */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    font-size: 20px;
+}
+
+/* עיצוב הניווט העליון */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* מאפשר למקם את החיפוש במדויק */
+    background-color: #ffffff;
+    padding: 20px 40px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    font-size: 22px;
+}
+
+.logo a {
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #ff4500;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 30px;
+    padding: 15px 20px;
+    width: 750px;
+    position: absolute; /* מיקום מוחלט */
+    left: 50%; /* מיקום במרכז */
+    transform: translateX(-50%); /* הזזה למרכז מדויק */
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 20px;
+}
+
+.search-icon {
+    color: #777;
+    font-size: 24px;
+}
+
+/* אייקון הפרופיל */
+.profile-icon a {
+    font-size: 32px;
+    color: #333;
+}
+
+/* עיצוב התוכן המרכזי */
+.content {
+    overflow: hidden;
+    display: flex;
+    flex: 1;
+    width: 100%;
+    height: calc(100vh - 80px);
+}
+
+/* עיצוב הסרגל הצדדי */
+.sidebar {
+    flex: 0 0 280px;
+    width: 280px;
+    background: #ffffff;
+    padding: 45px;
+    box-shadow: 3px 0 7px rgba(0, 0, 0, 0.1);
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 30px 0;
+}
+
+.sidebar a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* עיצוב התוכן המרכזי */
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+    background: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: calc(100% - 535px);
+}
+
+/* עיצוב הפוסטים */
+.post-list {
+    width: 1000px;
+    max-width: 100%;
+}
+
+.post-item {
+    background: white;
+    padding: 50px;
+    margin-bottom: 35px;
+    border-radius: 12px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    font-size: 22px;
+    width: 100%;
+}
+
+/* ברוכים הבאים + שם משתמש */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* רווח בין הטקסט לאייקון */
+}
+
+.welcome-text {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
