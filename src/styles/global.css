@@ -12,4 +12,29 @@
     align-items: center;
     height: 100vh;
   }
+
+  .container {
+    max-width: 600px;
+  }
+  
+  .card {
+    border-radius: 15px;
+  }
+  
+  .rounded-circle {
+    object-fit: cover;
+  }
+  
+  input[type="file"] {
+    display: none;
+  }
+  
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  
+  .text-muted {
+    font-size: 0.9rem;
+  }
+  
   

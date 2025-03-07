@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserDetails, updateUser, deleteUser } from "../services/api-client";
-import { FaUser, FaTrash, FaUpload } from "react-icons/fa";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
+import { FaTrash, FaUser } from "react-icons/fa";
+import "../styles/profile.css"; // קובץ העיצוב
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ _id: string; username: string; email: string; imgUrl?: string } | null>(null);
   const [newUsername, setNewUsername] = useState("");
   const [newImage, setNewImage] = useState<File | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null); // סטייט לתמונה
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -20,6 +24,7 @@ const ProfilePage = () => {
       .then((data) => {
         setUser(data);
         setNewUsername(data.username);
+        setProfileImage(data.imgUrl && data.imgUrl.trim() !== "" ? data.imgUrl : null); // עדכון תמונה רק אם יש נתון תקין
       })
       .catch(() => {
         localStorage.removeItem("token");
@@ -30,35 +35,25 @@ const ProfilePage = () => {
 
   const handleUpdate = async () => {
     if (!user) return;
-  
+
     const formData = new FormData();
     formData.append("username", newUsername);
-  
+
     if (newImage) {
-      console.log("✅ קובץ נמצא, מוסיפים אותו ל-FormData:", newImage);
-      formData.append("profileImage", newImage); 
-    } else {
-      console.warn("⚠️ אין קובץ להעלאה!");
+      formData.append("profileImage", newImage);
     }
-  
-    console.log("🔹 Sending FormData to Backend:");
-    for (const pair of formData.entries()) {
-      console.log(`   ➜ ${pair[0]}:`, pair[1]); 
-    }
-  
+
     try {
       const updatedUser = await updateUser(user._id, formData);
       if (updatedUser) {
         setUser(updatedUser);
+        setProfileImage(updatedUser.imgUrl); // עדכון תמונה לאחר השמירה
         alert("✅ Profile updated successfully!");
       }
     } catch (error) {
       console.error("❌ Error updating profile:", error);
     }
   };
-  
-  
-
 
   const handleDelete = async () => {
     if (!user) return;
@@ -76,61 +71,64 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-lg text-center">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Profile Settings</h2>
-        
-        {/* תמונת פרופיל */}
-        <div className="relative w-32 h-32 mx-auto mb-4">
-          {user?.imgUrl ? (
-            <img 
-            src={user.imgUrl.startsWith("http") ? user.imgUrl : `http://localhost:3000${user.imgUrl}`} 
-            alt="Profile" 
-            className="w-full h-full rounded-full object-cover shadow" 
-          />
-          ) : (
-            <div className="w-full h-full bg-gray-300 rounded-full flex items-center justify-center">
-              <FaUser className="text-gray-600 text-5xl" />
+    <div className="home-container">
+      {/* הניווט העליון */}
+      <Navbar user={user} />
+
+      <div className="content">
+        {/* הסרגל הצדדי */}
+        <Sidebar />
+
+        {/* התוכן המרכזי - עמוד פרופיל */}
+        <div className="main-content">
+          <div className="profile-container">
+            <div className="profile-card">
+              <h4 className="profile-title">Profile Picture</h4>
+              <div className="profile-image-container">
+                {profileImage ? (
+                  <img src={profileImage} alt="Profile" className="profile-image" />
+                ) : (
+                  <div className="default-profile">
+                    <FaUser className="default-profile-icon" />
+                  </div>
+                )}
+              </div>
+
+              {/* כפתור העלאת תמונה */}
+              <label className="file-upload">
+                <input
+                  type="file"
+                  className="file-input"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setNewImage(e.target.files[0]);
+                      setProfileImage(URL.createObjectURL(e.target.files[0])); // הצגת תמונה זמנית לפני השמירה
+                    }
+                  }}
+                />
+              </label>
+
+              {/* טקסט של מגבלת גודל */}
+              <p className="image-info">JPG or PNG no larger than 5 MB</p>
             </div>
-          )}
-          <label className="absolute bottom-0 right-0 bg-gray-700 text-white p-2 rounded-full cursor-pointer">
-            <FaUpload />
-            <input type="file" className="hidden" onChange={(e) => e.target.files && e.target.files[0] && (console.log("✅ קובץ נבחר:", e.target.files[0]), setNewImage(e.target.files[0]))} />
-          </label>
+
+            <div className="profile-details">
+              <h3>Account Details</h3>
+              <label>Username</label>
+              <input type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} className="input-field" />
+
+              <label>Email</label>
+              <input type="text" value={user?.email || ""} readOnly className="input-field read-only" />
+
+              <div className="button-container">
+                <button onClick={handleUpdate} className="save-button">Save Changes</button>
+                <button onClick={handleDelete} className="delete-button">
+                  <FaTrash /> Delete Account
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-
-        {/* טופס עדכון */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Username:</label>
-          <input
-            type="text"
-            className="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring focus:ring-blue-300"
-            value={newUsername}
-            onChange={(e) => setNewUsername(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Email:</label>
-          <p className="text-gray-500">{user?.email}</p>
-        </div>
-
-        {/* כפתור שמירה */}
-        <button
-          onClick={handleUpdate}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition w-full mb-2"
-        >
-          Save Changes
-        </button>
-
-        {/* כפתור מחיקה */}
-        <button
-          onClick={handleDelete}
-          className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition w-full flex items-center justify-center gap-2"
-        >
-          <FaTrash /> Delete Account
-        </button>
       </div>
     </div>
   );
