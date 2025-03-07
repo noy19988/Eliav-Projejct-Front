@@ -1,12 +1,39 @@
+import { useState, useEffect, useRef } from "react";
 import { FaUser, FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/home.css";
 
-const Navbar = ({ user }: { user: { username: string } | null }) => {
+const Navbar = ({ user }: { user: { username: string; profileImage?: string } | null }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/login");
+  };
+
+  const handleProfileClick = () => {
+    console.log("✅ Navigating to /profile");
+    navigate("/profile");
+  };
+
+  // סגירת התפריט כשמשתמש לוחץ מחוץ לאזור
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <nav className="navbar">
       <div className="logo">
-        <Link to="/">LOGO</Link>
+        <button onClick={() => navigate("/")} className="nav-btn">LOGO</button>
       </div>
       <div className="search-bar">
         <input type="text" placeholder="Search..." />
@@ -14,11 +41,25 @@ const Navbar = ({ user }: { user: { username: string } | null }) => {
       </div>
       <div className="user-info">
         <span className="welcome-text">Welcome, {user ? user.username : "Guest"}!</span>
-        <div className="profile-icon">
-          <Link to="/profile">
-            <FaUser />
-          </Link>
+        <div className="profile-icon" onClick={() => setDropdownOpen(!dropdownOpen)}>
+          {user && user.profileImage ? (
+            <img src={user.profileImage} alt="Profile" />
+          ) : (
+            <FaUser className="default-profile-icon" />
+          )}
         </div>
+
+        {/* תפריט נפתח */}
+        {dropdownOpen && (
+          <div className="dropdown-menu" ref={dropdownRef}>
+            <button onClick={handleProfileClick} className="dropdown-item">
+              Profile Settings
+            </button>
+            <button onClick={handleLogout} className="dropdown-item logout-btn">
+              Logout
+            </button>
+          </div>
+        )}
       </div>
     </nav>
   );

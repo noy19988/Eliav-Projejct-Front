@@ -52,10 +52,33 @@
     font-size: 24px;
 }
 
-/* אייקון הפרופיל */
-.profile-icon a {
-    font-size: 32px;
-    color: #333;
+.profile-icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-icon a, .profile-icon img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4a4a4a; /* צבע רקע אפור כהה */
+    color: white; /* צבע האייקון לבן */
+}
+
+.profile-icon a svg {
+    fill: white; /* צבע האייקון לבן */
+    font-size: 24px;
+}
+
+.profile-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* עיצוב התוכן המרכזי */
@@ -133,3 +156,64 @@
     font-weight: bold;
     color: #333;
 }
+
+
+
+/* תפריט נפתח - Dropdown */
+.dropdown-menu {
+    position: absolute;
+    top: 70px; /* מרחיק מעט למטה */
+    right: 10px;
+    background: white;
+    border-radius: 12px; /* פינות יותר מעוגלות */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+    width: 200px; /* יותר גדול */
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    font-size: 18px; /* טקסט יותר קריא */
+}
+
+.dropdown-item {
+    padding: 15px 20px; /* ריווח יותר נוח */
+    text-align: left;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+    display: block;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background: #f0f0f0;
+}
+
+.logout-btn {
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 15px 20px;
+    font-weight: 500;
+}
+
+.logout-btn:hover {
+    color: red;
+}
+
+
+.logout-btn {
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    color: red;
+}
+

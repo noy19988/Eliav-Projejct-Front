@@ -39,6 +39,7 @@ export const loginUser = async (email: string, password: string) => {
     throw errorMessage;
   }
 };
+  
 
 // 📌 רישום משתמש חדש
 export const signUpUser = async (username: string, email: string, password: string) => {
@@ -80,6 +81,43 @@ export const getUserDetails = async (userId: string) => {
     throw errorMessage;
   }
 };
+
+
+// 📌 מחיקת משתמש לפי ID
+export const deleteUser = async (userId: string) => {
+    try {
+      await apiClient.delete(`/users/${userId}`);
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      const errorMessage = axiosError.response?.data && typeof axiosError.response.data === "object"
+        ? (axiosError.response.data as { message?: string }).message || "Failed to delete user"
+        : "Failed to delete user";
+      
+      throw errorMessage;
+    }
+  };
+
+
+
+
+  export const updateUser = async (userId: string, formData: FormData) => {
+    try {
+        const response = await apiClient.put(`/users/${userId}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data", // 🔹 חשוב מאוד! אומר לשרת שהבקשה מכילה קובץ
+            },
+        });
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        throw axiosError.response?.data?.message || "Failed to update user";
+    }
+};
+
+
+  
 
 // 📌 ביטול בקשות API בצורה נכונה
 export const CanceledError = axios.CanceledError;
