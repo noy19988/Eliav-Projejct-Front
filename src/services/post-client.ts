@@ -1,15 +1,22 @@
 import apiClient from "./api-client";
 
+export interface User {
+  _id: string;
+  username: string;
+  imgUrl?: string; // תמונת פרופיל אופציונלית
+}
+
+
 export interface Post {
   _id: string;
   recipeTitle: string;
   category: string[];
-  imageUrl: string;
+  imageUrl?: string;
   difficulty: "easy" | "medium" | "hard";
   prepTime: number;
   ingredients: string[];
   instructions: string[];
-  authorId: string;
+  authorId: User; // ✅ עכשיו מחזיק אובייקט User במקום string
   likes: number;
   comments: string[];
   savedBy: string[];
