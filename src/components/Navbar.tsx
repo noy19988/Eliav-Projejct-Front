@@ -32,13 +32,18 @@ const Navbar = ({ user }: { user: { username: string; profileImage?: string } | 
 
   return (
     <nav className="navbar">
-      <div className="logo">
-        <button onClick={() => navigate("/")} className="nav-btn">LOGO</button>
+      {/* לוגו שנטען מתיקיית public */}
+      <div className="logo" onClick={() => navigate("/")}>
+        <img src="/logo.PNG" alt="Food Connect Logo" className="navbar-logo" />
       </div>
+
+      {/* שורת חיפוש */}
       <div className="search-bar">
         <input type="text" placeholder="Search..." />
         <FaSearch className="search-icon" />
       </div>
+
+      {/* אזור המשתמש */}
       <div className="user-info">
         <span className="welcome-text">Welcome, {user ? user.username : "Guest"}!</span>
         <div className="profile-icon" onClick={() => setDropdownOpen(!dropdownOpen)}>

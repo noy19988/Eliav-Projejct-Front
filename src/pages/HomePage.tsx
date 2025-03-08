@@ -1,43 +1,49 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserDetails } from "../services/api-client";
+import { getAllPosts, Post } from "../services/post-client";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import PostList from "../components/PostList";
-import PostCreatePage from "../pages/PostCreatePage"; // ✅ תיקון נתיב הקובץ
+import PostCreatePage from "../pages/PostCreatePage";
 import "../styles/home.css";
 
 function HomePage() {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ username: string } | null>(null);
-  const [isPostModalOpen, setIsPostModalOpen] = useState(false); // בקרה על פתיחת/סגירת מודאל
+  const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  const fetchPosts = async () => {
+    try {
+      const data = await getAllPosts();
+      setPosts(data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
       const userId = localStorage.getItem("userId");
 
-      console.log("📌 Checking userId:", userId); // ✅ בדיקה האם ה-userId קיים
-
       if (!userId) {
-        console.log("❌ No userId found, redirecting to /login");
         navigate("/login");
         return;
       }
 
       try {
         const userData = await getUserDetails(userId);
-        console.log("✅ User data fetched:", userData);
         setUser(userData);
-      } catch (error) {
-        console.error("❌ Error fetching user details:", error);
+      } catch {
         localStorage.removeItem("token");
         localStorage.removeItem("userId");
-        console.log("❌ Removing credentials, redirecting to /login");
         navigate("/login");
       }
     };
 
     fetchUserData();
+    fetchPosts();
   }, [navigate]);
 
   return (
@@ -46,16 +52,20 @@ function HomePage() {
       <div className="content">
         <Sidebar />
         <div className="main-content">
-          {/* כפתור יצירת פוסט */}
           <button className="create-post-btn" onClick={() => setIsPostModalOpen(true)}>
             Create Post
           </button>
 
-          {/* קומפוננטת יצירת פוסט */}
-          <PostCreatePage isOpen={isPostModalOpen} onClose={() => setIsPostModalOpen(false)} />
+          <PostCreatePage
+            isOpen={isPostModalOpen}
+            onClose={() => setIsPostModalOpen(false)}
+            onPostCreated={fetchPosts}
+          />
 
-          {/* רשימת פוסטים */}
-          <PostList />
+          {/* 📌 עטפתי את הרשימה בקונטיינר עם גלילה */}
+          <div className="post-list-container">
+            <PostList posts={posts} onPostDeleted={fetchPosts} />
+          </div>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
         <li><Link to="/"><FaHome /> Home</Link></li>
         <li><Link to="/my-posts"><FaUser /> My Posts </Link></li>
         <li><Link to="/saved-posts"><FaBookmark /> Saved Posts </Link></li>
-        <li><Link to="/recipes"><FaUtensils /> Recipes </Link></li>
+        <li><Link to="/recipes"><FaUtensils /> Explore Recipes </Link></li>
         <li><Link to="/about"><FaInfoCircle /> About </Link></li>
       </ul>
     </aside>

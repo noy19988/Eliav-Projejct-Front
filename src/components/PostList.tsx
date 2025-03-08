@@ -1,22 +1,25 @@
 import React from "react";
+import PostItem from "./PostItem"; // ✅ שימוש בקומפוננטה נפרדת
+import { Post } from "../services/post-client";
 import "../styles/home.css";
 
-const posts = [
-  { id: 1, title: "First Post", content: "This is the first post" },
-  { id: 2, title: "Second Post", content: "This is the second post" },
-];
+interface PostListProps {
+  posts: Post[];
+  onPostDeleted: () => void; // ✅ פונקציה שמתעדכנת אחרי מחיקה
+}
 
-const PostList: React.FC = () => {
+const PostList: React.FC<PostListProps> = ({ posts, onPostDeleted }) => {
   return (
     <div className="post-list">
-      {posts.map((post) => (
-        <div key={post.id} className="post-item">
-          <h3>{post.title}</h3>
-          <p>{post.content}</p>
-        </div>
-      ))}
+      {posts.length > 0 ? (
+        posts.map((post) => (
+          <PostItem key={post._id} post={post} onDelete={onPostDeleted} />
+        ))
+      ) : (
+        <p className="no-posts">No posts available. Start by adding one! 😊</p>
+      )}
     </div>
   );
 };
- 
+
 export default PostList;

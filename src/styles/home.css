@@ -12,7 +12,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative; /* מאפשר למקם את החיפוש במדויק */
+    position: relative;
     background-color: #ffffff;
     padding: 20px 40px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -27,67 +27,13 @@
     color: #ff4500;
 }
 
-.search-bar {
-    display: flex;
-    align-items: center;
-    background: #f4f4f4;
-    border-radius: 30px;
-    padding: 15px 20px;
-    width: 750px;
-    position: absolute; /* מיקום מוחלט */
-    left: 50%; /* מיקום במרכז */
-    transform: translateX(-50%); /* הזזה למרכז מדויק */
-}
-
-.search-bar input {
-    border: none;
-    background: transparent;
-    outline: none;
-    width: 100%;
-    font-size: 20px;
-}
-
-.search-icon {
-    color: #777;
-    font-size: 24px;
-}
-
-.profile-icon {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.profile-icon a, .profile-icon img {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #4a4a4a; /* צבע רקע אפור כהה */
-    color: white; /* צבע האייקון לבן */
-}
-
-.profile-icon a svg {
-    fill: white; /* צבע האייקון לבן */
-    font-size: 24px;
-}
-
-.profile-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 /* עיצוב התוכן המרכזי */
 .content {
-    overflow: hidden;
     display: flex;
     flex: 1;
     width: 100%;
     height: calc(100vh - 80px);
+    overflow: hidden; /* מונע גלילה על כל העמוד */
 }
 
 /* עיצוב הסרגל הצדדי */
@@ -95,7 +41,7 @@
     flex: 0 0 280px;
     width: 280px;
     background: #ffffff;
-    padding: 45px;
+    padding: 38px;
     box-shadow: 3px 0 7px rgba(0, 0, 0, 0.1);
     font-size: 22px;
     flex-shrink: 0;
@@ -126,12 +72,23 @@
     align-items: center;
     justify-content: flex-start;
     max-width: calc(100% - 535px);
+    overflow: hidden;
+}
+
+/* ✅ גלילה תקינה לרשימת הפוסטים */
+.post-list-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1000px;
+    overflow-y: auto; /* ✅ מוסיף גלילה לפוסטים */
+    padding-right: 10px;
+    max-height: calc(100vh - 120px); /* מתאים את גובה הרשימה */
+    padding-bottom: 20px; /* מרווח לתחתית */
 }
 
 /* עיצוב הפוסטים */
 .post-list {
-    width: 1000px;
-    max-width: 100%;
+    width: 100%;
 }
 
 .post-item {
@@ -148,7 +105,7 @@
 .user-info {
     display: flex;
     align-items: center;
-    gap: 15px; /* רווח בין הטקסט לאייקון */
+    gap: 15px;
 }
 
 .welcome-text {
@@ -157,25 +114,23 @@
     color: #333;
 }
 
-
-
 /* תפריט נפתח - Dropdown */
 .dropdown-menu {
     position: absolute;
-    top: 90px; /* מרחיק מעט למטה */
+    top: 147px;
     right: 30px;
     background: white;
-    border-radius: 12px; /* פינות יותר מעוגלות */
+    border-radius: 12px;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
-    width: 200px; /* יותר גדול */
+    width: 200px;
     display: flex;
     flex-direction: column;
     padding: 12px 0;
-    font-size: 18px; /* טקסט יותר קריא */
+    font-size: 18px;
 }
 
 .dropdown-item {
-    padding: 15px 20px; /* ריווח יותר נוח */
+    padding: 15px 20px;
     text-align: left;
     text-decoration: none;
     color: #333;
@@ -203,21 +158,6 @@
     color: red;
 }
 
-
-.logout-btn {
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.logout-btn:hover {
-    color: red;
-}
-
-
 .create-post-btn {
     padding: 12px 20px;
     background-color: #007bff;
@@ -227,9 +167,46 @@
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
-  }
-  
-  .create-post-btn:hover {
+}
+
+.create-post-btn:hover {
     background-color: #0056b3;
-  }
-  
+}
+
+.navbar-logo {
+    width: 190px;
+    height: auto;
+    border-radius: 7px;
+    object-fit: contain;
+}
+/* עיצוב שורת החיפוש */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: #f4f4f4;
+    border-radius: 30px;
+    padding: 15px 20px;
+    width: 750px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* ממקם את החיפוש במרכז */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    width: 100%;
+    font-size: 20px;
+    color: #333;
+    padding: 5px;
+}
+
+.search-icon {
+    color: #777;
+    font-size: 24px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+

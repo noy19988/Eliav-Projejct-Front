@@ -1,36 +1,60 @@
 import apiClient from "./api-client";
-import { AxiosError, CanceledError } from "axios";
-
-export { CanceledError };
 
 export interface Post {
   _id: string;
-  title: string;
-  content: string;
-  owner: string;
+  recipeTitle: string;
+  category: string[];
+  imageUrl: string;
+  difficulty: "easy" | "medium" | "hard";
+  prepTime: number;
+  ingredients: string[];
+  instructions: string[];
+  authorId: string;
+  likes: number;
+  comments: string[];
+  savedBy: string[];
+  createdAt: string;
 }
 
-export const getAllPosts = async () => {
-  const abortController = new AbortController();
-  
+// 📌 שליפת כל הפוסטים
+export const getAllPosts = async (): Promise<Post[]> => {
+    try {
+      const response = await apiClient.get("/posts"); // 📌 שינוי הנתיב
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      throw error;
+    }
+};
+
+// 📌 יצירת פוסט חדש
+export const createPost = async (postData: Partial<Post>) => {
   try {
-    const response = await apiClient.get<Post[]>("/posts", {
-      signal: abortController.signal,
-    });
-    return { data: response.data, abort: () => abortController.abort() };
-
+    const response = await apiClient.post("/posts", postData);
+    return response.data.post;
   } catch (error) {
-    if (error instanceof CanceledError) {
-      console.warn("Request was canceled");
-      return { data: [], abort: () => abortController.abort() }; // מחזיר מערך ריק אם הבקשה בוטלה
-    }
+    console.error("Error creating post:", error);
+    throw error;
+  }
+};
 
-    if (error instanceof AxiosError) {
-      console.error("Error fetching posts:", error.response?.data || error.message);
-      throw error.response?.data || "Failed to fetch posts";
-    }
+// 📌 מחיקת פוסט
+export const deletePost = async (postId: string) => {
+  try {
+    await apiClient.delete(`/posts/${postId}`);
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
 
-    console.error("Unexpected error:", error);
-    throw "Unexpected error occurred";
+// 📌 עדכון פוסט
+export const updatePost = async (postId: string, updatedData: Partial<Post>) => {
+  try {
+    const response = await apiClient.put(`/posts/${postId}`, updatedData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating post:", error);
+    throw error;
   }
 };
