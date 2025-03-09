@@ -108,3 +108,21 @@ export const getPostsByUser = async (userId: string): Promise<Post[]> => {
       throw error;
   }
 };
+
+
+// 📌 שליפת ערכים תזונתיים של פוסט מסוים
+export const getPostNutrition = async (postId: string): Promise<{ calories: number; protein: number; sugar: number } | null> => {
+  try {
+      const response = await apiClient.get(`/posts/${postId}/nutrition`);
+      return response.data;
+  } catch (error) {
+      console.error("❌ Error fetching nutritional values:", error);
+      return null; // אם יש שגיאה, נחזיר null כדי למנוע קריסת הקוד
+  }
+};
+
+
+
+
+
+

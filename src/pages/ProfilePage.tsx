@@ -33,8 +33,19 @@ const ProfilePage = () => {
       });
   }, [navigate]);
 
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    const filteredValue = inputValue.replace(/\s/g, ""); // מונע רווחים
+    setNewUsername(filteredValue);
+  };
+
   const handleUpdate = async () => {
     if (!user) return;
+
+    if (newUsername.length < 2) {
+      alert("Username must be at least 2 characters long.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("username", newUsername);
@@ -115,7 +126,12 @@ const ProfilePage = () => {
             <div className="profile-details">
               <h3>Account Details</h3>
               <label>Username</label>
-              <input type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} className="input-field" />
+              <input
+                type="text"
+                value={newUsername}
+                onChange={handleUsernameChange}
+                className="input-field"
+              />
 
               <label>Email</label>
               <input type="text" value={user?.email || ""} readOnly className="input-field read-only" />

@@ -3,6 +3,8 @@ import { Post, deletePost, updatePost, savePost } from "../services/post-client"
 import { addComment, getCommentsByPost, Comment } from "../services/comment-client";
 import { getUserDetails } from "../services/api-client";
 import "../styles/postItem.css";
+import { RiRobot2Fill } from "react-icons/ri";
+import { getPostNutrition } from "../services/post-client"; 
 import { FaHeart, FaComment, FaTrash, FaEllipsisV, FaEdit, FaBookmark } from "react-icons/fa";
 import PostUpdatePage from "../pages/PostUpdatePage";
 import { Link } from "react-router-dom"; // ייבוא Link
@@ -49,6 +51,9 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
     const [likesCount, setLikesCount] = useState(post.likes);
     const [commentsCount, setCommentsCount] = useState(0);
     const [saved, setSaved] = useState(false);
+    const [nutrition, setNutrition] = useState<{ calories: number; protein: number; sugar: number } | null>(null);
+    const [loadingNutrition, setLoadingNutrition] = useState(false);
+    
 
     const userId = localStorage.getItem("userId");
     const isOwner = userId === post.authorId._id;
@@ -113,6 +118,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
             }
         }
     };
+    
 
     const handleLike = async () => {
         const newLiked = !liked;
@@ -146,6 +152,19 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
           console.error("Error saving/unsaving post:", error);
         }
     };
+
+
+    const handleGetNutrition = async () => {
+      setLoadingNutrition(true);
+      try {
+          const nutritionData = await getPostNutrition(post._id);
+          setNutrition(nutritionData);
+      } catch (error) {
+          console.error("Error fetching nutrition data:", error);
+      }
+      setLoadingNutrition(false);
+  };
+
 
     return (
       <div className="post-item">
@@ -205,6 +224,15 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
               <button className="comment-btn" onClick={() => setShowComments(!showComments)}>
                   <FaComment /> Comment
               </button>
+              <button className="nutrition-btn" onClick={handleGetNutrition}>
+                  <RiRobot2Fill />  Get nutrition value by AI
+                </button>
+                {loadingNutrition && <span>Loading...</span>}
+                {nutrition && (
+                    <span className="nutrition-info">
+                        Calories: {nutrition.calories}, Protein: {nutrition.protein}g, Sugar: {nutrition.sugar}g
+                    </span>
+                )}
           </div>
   
           {showComments && (
