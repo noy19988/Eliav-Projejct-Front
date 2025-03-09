@@ -13,7 +13,7 @@ const PostCreatePage: React.FC<PostCreatePageProps> = ({ isOpen, onClose, onPost
     category: [] as string[],
     imageUrl: "",
     difficulty: "easy" as "easy" | "medium" | "hard",
-    prepTime: 1,
+    prepTime: "" as string | number,
     ingredients: [] as string[],
     instructions: [] as string[],
   });
@@ -24,13 +24,17 @@ const PostCreatePage: React.FC<PostCreatePageProps> = ({ isOpen, onClose, onPost
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    if (name === "category" || name === "ingredients" || name === "instructions") {
-      setFormData({ ...formData, [name]: value.split(",").map((item) => item.trim()) });
+  
+    if (name === "prepTime") {
+      const numericValue = value === "" ? "" : parseInt(value, 10); // השדה יתחיל ריק ויקבל מספרים בלבד
+      setFormData({ ...formData, [name]: isNaN(numericValue as number) ? "" : numericValue });
+    } else if (name === "category" || name === "ingredients" || name === "instructions") {
+      setFormData({ ...formData, [name]: value.split(",") });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -121,7 +125,7 @@ const PostCreatePage: React.FC<PostCreatePageProps> = ({ isOpen, onClose, onPost
             <option value="medium">Medium</option>
             <option value="hard">Hard</option>
           </select>
-          <input type="number" name="prepTime" placeholder="Preparation Time (min)" value={formData.prepTime} onChange={handleChange} required />
+          <input type="number" name="prepTime" placeholder="Preparation Time (min)" value={formData.prepTime} onChange={handleChange} onKeyDown={(e) => e.key === "-" && e.preventDefault()} min="0" required />
           <textarea name="ingredients" placeholder="Ingredients (comma separated)" value={formData.ingredients.join(", ")} onChange={handleChange} required />
           <textarea name="instructions" placeholder="Instructions (comma separated)" value={formData.instructions.join(", ")} onChange={handleChange} required />
           <div className="modal-buttons">

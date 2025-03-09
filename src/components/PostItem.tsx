@@ -5,6 +5,7 @@ import { getUserDetails } from "../services/api-client";
 import "../styles/postItem.css";
 import { FaHeart, FaComment, FaTrash, FaEllipsisV, FaEdit, FaBookmark } from "react-icons/fa";
 import PostUpdatePage from "../pages/PostUpdatePage";
+import { Link } from "react-router-dom"; // ייבוא Link
 
 interface PostItemProps {
     post: Post;
@@ -148,93 +149,103 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
 
     return (
       <div className="post-item">
-      <div className="post-header">
-          <div className="post-author">
-              <img src={post.authorId.imgUrl || "https://example.com/default-profile.png"} alt={post.authorId.username} className="author-img" />
-              <div className="author-details">
-                  <span className="author-name">{post.authorId.username}</span>
-                  <span className="post-created-at">{formatCreatedAt(post.createdAt)}</span>
+          <div className="post-header">
+              <div className="post-author">
+                  <Link to={`/profile/${post.authorId._id}`}>
+                      <img src={post.authorId.imgUrl || "https://example.com/default-profile.png"} 
+                           alt={post.authorId.username} 
+                           className="author-img" />
+                  </Link>
+                  <div className="author-details">
+                      <span className="author-name">{post.authorId.username}</span>
+                      <span className="post-created-at">{formatCreatedAt(post.createdAt)}</span>
+                  </div>
               </div>
-          </div>
-                {isOwner && (
-                    <div className="post-options">
-                        <button className={`save-btn ${saved ? 'saved' : ''}`} aria-label="Save post" onClick={handleSave}>
-                            <FaBookmark className="save-icon" />
-                        </button>
-                        <button className="options-btn" onClick={() => setShowDropdown(!showDropdown)}>
-                            <FaEllipsisV />
-                        </button>
-                        {showDropdown && (
-                            <ul className="dropdown-menu" onClick={() => setShowDropdown(false)}>
-                                <li onClick={handleDeletePost}><FaTrash /> Delete Post</li>
-                                <li onClick={handleEditPost}><FaEdit /> Edit Post</li>
-                            </ul>
-                        )}
-                    </div>
-                )}
-            </div>
+  
+              <div className="post-options">
+    <button className={`save-btn ${saved ? 'saved' : ''}`} aria-label="Save post" onClick={handleSave}>
+        <FaBookmark className="save-icon" />
+    </button>
 
-            <div className="post-details">
-                <h2 className="post-title">{post.recipeTitle}</h2>
-                <p className="post-category">Category: {post.category.join(", ")}</p>
-                <p className="post-difficulty">Difficulty: {post.difficulty}</p>
-                <p className="post-prep-time">Prep Time: {post.prepTime} min</p>
-            </div>
+    {isOwner && (
+        <>
+            <button className="options-btn" onClick={() => setShowDropdown(!showDropdown)}>
+                <FaEllipsisV />
+            </button>
 
-            {post.imageUrl && <img src={post.imageUrl} alt={post.recipeTitle} className="post-image" />}
-
-            <div className="post-stats">
-                <span>Likes: {likesCount}</span>
-                <span>Comments: {commentsCount}</span>
-            </div>
-
-            <div className="post-actions">
-                <button className={`like-btn ${liked ? "liked" : ""}`} onClick={handleLike}>
-                    <FaHeart /> Like
-                </button>
-                <button className="comment-btn" onClick={() => setShowComments(!showComments)}>
-                    <FaComment /> Comment
-                </button>
-            </div>
-
-            {showComments && (
-                <div className="comments-section">
-                    <textarea placeholder="Write a comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)} />
-                    <button className="submit-comment" onClick={handleAddComment}>Post</button>
-
-                    <div className="previous-comments">
-                        {comments.length > 0 ? (
-                            comments.map(comment => (
-                                <div key={comment._id} className="comment-item">
-                                    <img
-                                        src={comment.author.imgUrl || "https://example.com/default-profile.png"}
-                                        alt={comment.author.username}
-                                        className="comment-author-img"
-                                    />
-                                    <div className="comment-content">
-                                        <strong>{comment.author.username}</strong>
-                                        <p>{comment.content}</p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No comments yet. Be the first to comment!</p>
-                        )}
-                    </div>
-                </div>
+            {showDropdown && (
+                <ul className="dropdown-menu">
+                    <li onClick={handleDeletePost}><FaTrash /> Delete Post</li>
+                    <li onClick={handleEditPost}><FaEdit /> Edit Post</li>
+                </ul>
             )}
-
-            <PostUpdatePage
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                onPostUpdated={() => {
-                    setIsEditModalOpen(false);
-                    onDelete();
-                }}
-                post={post}
-            />
-        </div>
-    );
+        </>
+    )}
+</div>
+          </div>
+  
+          <div className="post-details">
+              <h2 className="post-title">{post.recipeTitle}</h2>
+              <p className="post-category">Category: {post.category.join(", ")}</p>
+              <p className="post-difficulty">Difficulty: {post.difficulty}</p>
+              <p className="post-prep-time">Prep Time: {post.prepTime} min</p>
+          </div>
+  
+          {post.imageUrl && <img src={post.imageUrl} alt={post.recipeTitle} className="post-image" />}
+  
+          <div className="post-stats">
+              <span>Likes: {likesCount}</span>
+              <span>Comments: {commentsCount}</span>
+          </div>
+  
+          <div className="post-actions">
+              <button className={`like-btn ${liked ? "liked" : ""}`} onClick={handleLike}>
+                  <FaHeart /> Like
+              </button>
+              <button className="comment-btn" onClick={() => setShowComments(!showComments)}>
+                  <FaComment /> Comment
+              </button>
+          </div>
+  
+          {showComments && (
+              <div className="comments-section">
+                  <textarea placeholder="Write a comment..." value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+                  <button className="submit-comment" onClick={handleAddComment}>Post</button>
+  
+                  <div className="previous-comments">
+                      {comments.length > 0 ? (
+                          comments.map(comment => (
+                              <div key={comment._id} className="comment-item">
+                                  <img
+                                      src={comment.author.imgUrl || "https://example.com/default-profile.png"}
+                                      alt={comment.author.username}
+                                      className="comment-author-img"
+                                  />
+                                  <div className="comment-content">
+                                      <strong>{comment.author.username}</strong>
+                                      <p>{comment.content}</p>
+                                  </div>
+                              </div>
+                          ))
+                      ) : (
+                          <p>No comments yet. Be the first to comment!</p>
+                      )}
+                  </div>
+              </div>
+          )}
+  
+          <PostUpdatePage
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              onPostUpdated={() => {
+                  setIsEditModalOpen(false);
+                  onDelete();
+              }}
+              post={post}
+          />
+      </div>
+  );
+  
 };
 
 export default PostItem;

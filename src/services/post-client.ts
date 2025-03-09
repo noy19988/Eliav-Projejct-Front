@@ -96,3 +96,15 @@ export const savePost = async (postId: string) => {
     throw error; // זריקת השגיאה כדי לטפל בה בקומפוננטה
   }
 };
+
+
+// 📌 שליפת פוסטים של משתמש מסוים
+export const getPostsByUser = async (userId: string): Promise<Post[]> => {
+  try {
+      const response = await apiClient.get(`/posts/user/${userId}`);
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching user posts:", error);
+      throw error;
+  }
+};

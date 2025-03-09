@@ -3,9 +3,10 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa;
-    padding: 40px; /* ריווח מסביב */
+    background-color: #f0f0f0; /* אפור חלש */
+    padding: 2000px;
 }
+
 
 .login-box {
     background: white;
