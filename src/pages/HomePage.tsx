@@ -8,6 +8,7 @@ import PostList from "../components/PostList";
 import PostCreatePage from "../pages/PostCreatePage";
 import "../styles/home.css";
 
+
 function HomePage() {
   const navigate = useNavigate();
   const [user, setUser] = useState<{ username: string } | null>(null);

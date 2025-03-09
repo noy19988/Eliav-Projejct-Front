@@ -7,7 +7,7 @@ export interface Comment {
   author: {
     _id: string;
     username: string;
-    imgUrl?: string;
+    imgUrl?: string; // ✅ תמונת פרופיל של המשתמש
   };
   createdAt: string;
 }

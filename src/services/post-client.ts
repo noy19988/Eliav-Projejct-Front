@@ -16,8 +16,9 @@ export interface Post {
   prepTime: number;
   ingredients: string[];
   instructions: string[];
-  authorId: User; // ✅ עכשיו מחזיק אובייקט User במקום string
+  authorId: User;
   likes: number;
+  likedBy: string[]; // הוספת שדה likedBy
   comments: string[];
   savedBy: string[];
   createdAt: string;
@@ -56,12 +57,42 @@ export const deletePost = async (postId: string) => {
 };
 
 // 📌 עדכון פוסט
-export const updatePost = async (postId: string, updatedData: Partial<Post>) => {
+export const updatePost = async (postId: string, updatedData: Partial<Post> | FormData, liked?: boolean) => {
   try {
-    const response = await apiClient.put(`/posts/${postId}`, updatedData);
+      const isFormData = updatedData instanceof FormData;
+
+      const requestData = isFormData
+          ? updatedData
+          : { ...updatedData, liked }; // הוספת `liked` אם זה לא `FormData`
+
+      const response = await apiClient.put(
+          `/posts/${postId}`,
+          requestData,
+          {
+              headers: isFormData ? { "Content-Type": "multipart/form-data" } : { "Content-Type": "application/json" },
+          }
+      );
+
+      return response.data;
+  } catch (error) {
+      console.error("Error updating post:", error);
+      throw error;
+  }
+};
+
+
+export const savePost = async (postId: string) => {
+  try {
+    const userId = localStorage.getItem("userId"); // שליפת ה-ID של המשתמש
+
+    if (!userId) {
+      throw new Error("User not logged in"); // טיפול במקרה שהמשתמש לא מחובר
+    }
+
+    const response = await apiClient.put(`/posts/${postId}/save`, { userId }); // שליחת בקשה ל-backend
     return response.data;
   } catch (error) {
-    console.error("Error updating post:", error);
-    throw error;
+    console.error("Error saving/unsaving post:", error);
+    throw error; // זריקת השגיאה כדי לטפל בה בקומפוננטה
   }
 };
