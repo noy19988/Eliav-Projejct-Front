@@ -225,7 +225,7 @@ const PostItem: React.FC<PostItemProps> = ({ post, onDelete }) => {
                   <FaComment /> Comment
               </button>
               <button className="nutrition-btn" onClick={handleGetNutrition}>
-                  <RiRobot2Fill />  Get nutrition value by AI
+                  <RiRobot2Fill />  Generate nutrition value by AI
                 </button>
                 {loadingNutrition && <span>Loading...</span>}
                 {nutrition && (

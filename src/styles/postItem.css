@@ -262,3 +262,14 @@
   color: #888;
   margin-top: 2px;
 }
+
+
+/* תצוגת הנתונים התזונתיים */
+.nutrition-info {
+  font-size: 17px;
+  color: #333;
+  margin-left: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
